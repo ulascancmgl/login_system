@@ -12,7 +12,7 @@ class Service {
   Future<http.Response> saveUser(
       String userName, String password, String role) async {
     //create uri
-    var uri = Uri.parse("http://192.168.1.102:8080/api/register/user");
+    var uri = Uri.parse("http://{your-api-address}/api/register/user");
     //header
     Map<String, String> headers = {"Content-Type": "application/json"};
     //body
@@ -33,7 +33,7 @@ class Service {
 
   Future<http.Response> loginUser(String userName, String password) async {
     var uri = Uri.parse(
-        "http://192.168.1.102:8080/api/login?userName=$userName&password=$password");
+        "http://{your-api-address}/api/login?userName=$userName&password=$password");
     Map<String, String> headers = {"Content-Type": "application/json"};
     Map data = {
       'userName': '$userName',

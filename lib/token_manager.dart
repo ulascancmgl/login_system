@@ -23,7 +23,7 @@ class TokenManager {
 
 Future<void> fetchUserData(String token) async {
   final response = await http.get(
-    Uri.parse('http://192.168.1.102:8080/api/user'),
+    Uri.parse('http://{your-api-address}/api/user'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
