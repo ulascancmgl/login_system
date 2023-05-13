@@ -1,4 +1,6 @@
+import 'package:provider/provider.dart';
 import 'register.dart';
+import 'userModel.dart';
 import './homePage.dart';
 import 'package:flutter/material.dart';
 import './service.dart';
@@ -53,7 +55,10 @@ class _LoginPageState extends State<LoginPage> {
               onPressed: () async {
                 var response = await service.loginUser(userNameController.text, passwordController.text);
                 if (response.statusCode == 200) {
-                  // navigate to the home screen on successful login
+                  Provider.of<UserModel>(context, listen: false).setUserCredentials(
+                    userNameController.text,
+                    passwordController.text,
+                  );// navigate to the home screen on successful login
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => HomePage()),

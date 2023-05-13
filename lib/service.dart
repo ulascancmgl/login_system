@@ -52,5 +52,28 @@ class Service {
 
     return response;
   }
+
+
+  Future<http.Response> updateUser(String userName, String firstName, String lastName, String birthDate, String gender) async {
+
+    var uri = Uri.parse(
+        "http://{your-api-address}/api/$userName/info");
+    Map<String, String> headers = {"Content-Type": "application/json"};
+    Map data = {
+      "firstName": '$firstName',
+      "lastName": '$lastName',
+      "birthDate": '$birthDate',
+      "gender": '$gender'
+    };
+    var body = json.encode(data);
+    var response = await http.post(uri, headers: headers, body: body);
+
+    print("${response.body}");
+
+    return response;
+  }
+
+
+
 }
 

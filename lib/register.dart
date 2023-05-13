@@ -55,6 +55,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               obscureText: true, // Set this to true to hide the password
             ),
+            //for some space bwtween fields
             SizedBox(
               height: 10,
             ),
@@ -106,7 +107,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 );
               },
               child: Text(
-                'I already have an account',
+                'I have already an account',
                 style: TextStyle(
                   fontSize: 25,
                 ),

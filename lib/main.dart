@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import 'homePage.dart';
+import 'package:provider/provider.dart';
 import 'register.dart';
+import 'userModel.dart';
 import 'token_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'loginUser.dart';
+import './loginUser.dart';
+import 'homePage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Get the token stored in the SharedPreferences
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? token = await TokenManager().getToken();
+  TokenManager tokenManager = TokenManager();
+  String? token = await tokenManager.getToken();
 
   // Set the initial page based on whether the token exists or not
   Widget initialPage;
@@ -22,9 +24,13 @@ void main() async {
     initialPage = LoginPage();
   }
 
-  runApp(MyApp(initialPage: initialPage));
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => UserModel(),
+      child: MyApp(initialPage: initialPage),
+    ),
+  );
 }
-
 
 class MyApp extends StatelessWidget {
   final Widget initialPage;
@@ -34,6 +40,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'My App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
