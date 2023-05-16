@@ -1,5 +1,5 @@
-import './service.dart';
-import './loginUser.dart';
+import '/service.dart';
+import '/login_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -23,6 +23,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Registration Page'),
+        automaticallyImplyLeading: false,
       ),
       body: Container(
         padding: EdgeInsets.all(20),
@@ -103,7 +104,12 @@ class _RegisterPageState extends State<RegisterPage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
+                  MaterialPageRoute(
+                    builder: (context) => LoginWidget(
+                      onLogin: (username, password) {},
+                      onSuccess: () {},
+                    ),
+                  ),
                 );
               },
               child: Text(

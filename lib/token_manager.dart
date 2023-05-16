@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'constants.dart';
+
 class TokenManager {
   final String _tokenKey = "jwt_token";
 
@@ -23,7 +25,7 @@ class TokenManager {
 
 Future<void> fetchUserData(String token) async {
   final response = await http.get(
-    Uri.parse('http://{your-api-address}/api/user'),
+    Uri.parse('$baseUrl/api/user'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',

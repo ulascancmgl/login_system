@@ -1,55 +1,63 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'register.dart';
-import 'userModel.dart';
-import 'token_manager.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import './loginUser.dart';
-import 'homePage.dart';
+import '/home.dart';
+import 'login_widget.dart';
+import 'service.dart';
+import './token_manager.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  // Get the token stored in the SharedPreferences
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  TokenManager tokenManager = TokenManager();
-  String? token = await tokenManager.getToken();
-
-  // Set the initial page based on whether the token exists or not
-  Widget initialPage;
-  if (token != null && token.isNotEmpty) {
-    initialPage = HomePage();
-    print(token);
-  } else {
-    initialPage = LoginPage();
-  }
-
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => UserModel(),
-      child: MyApp(initialPage: initialPage),
-    ),
-  );
+void main() {
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final Widget initialPage;
-
-  const MyApp({Key? key, required this.initialPage}) : super(key: key);
+  final Service service = Service();
+  Function(String, String) get loginUser => service.loginUser;
+  final TokenManager _tokenManager = TokenManager();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'My App',
+      title: 'Login App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: initialPage,
-      routes: {
-        '/register': (context) => RegisterPage(),
-        '/loginUser': (context) => LoginPage(),
-      },
+      home: FutureBuilder<String>(
+        future: _tokenManager.getToken(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // Show a loading indicator while checking the token
+            return CircularProgressIndicator();
+          } else {
+            String token = snapshot.data ?? '';
+            if (token.isNotEmpty) {
+              print(token);
+              // Token exists, navigate to the home page
+              return HomePage();
+            } else {
+              // Token doesn't exist, show the login page
+              return Navigator(
+                onGenerateRoute: (settings) {
+                  return MaterialPageRoute(
+                    builder: (context) => Scaffold(
+                      body: LoginWidget(
+                        onLogin: loginUser,
+                        onSuccess: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => HomePage(),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                },
+              );
+            }
+          }
+        },
+      ),
     );
   }
 }
